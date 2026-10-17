@@ -1,0 +1,46 @@
+[
+  {
+    "id": 11,
+    "title": "Alice's Adventures in Wonderland",
+    "author": "Lewis Carroll",
+    "year": 1865,
+    "genre": "Fantasy",
+    "file": "books/alice.txt",
+    "desc": "A curious girl falls down a rabbit hole into a nonsensical world of talking rabbits, mad tea parties and a temperamental Queen of Hearts.",
+    "words": 26525,
+    "minutes": 121
+  },
+  {
+    "id": 35,
+    "title": "The Time Machine",
+    "author": "H. G. Wells",
+    "year": 1895,
+    "genre": "Science Fiction",
+    "file": "books/time-machine.txt",
+    "desc": "A Victorian scientist travels to the year 802,701 and discovers humanity split into two species — the gentle Eloi and the terrifying Morlocks.",
+    "words": 32454,
+    "minutes": 148
+  },
+  {
+    "id": 1661,
+    "title": "The Adventures of Sherlock Holmes",
+    "author": "Arthur Conan Doyle",
+    "year": 1892,
+    "genre": "Mystery",
+    "file": "books/sherlock-holmes.txt",
+    "desc": "Twelve cases for the world's first consulting detective, narrated by Dr. Watson — from 'A Scandal in Bohemia' to 'The Copper Beeches'.",
+    "words": 104506,
+    "minutes": 475
+  },
+  {
+    "id": 1342,
+    "title": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "year": 1813,
+    "genre": "Romance",
+    "file": "books/pride-prejudice.txt",
+    "desc": "Elizabeth Bennet spars with the proud Mr. Darcy in Austen's sparkling comedy of manners, class and first impressions.",
+    "words": 127360,
+    "minutes": 579
+  }
+]

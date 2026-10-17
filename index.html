@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bindery — Read the Classics, Free</title>
+  <meta name="description" content="A cozy e-book library for public-domain classics. Read bundled masterpieces in a distraction-free reader, and discover 70,000+ free books from Project Gutenberg." />
+  <meta property="og:title" content="Bindery — Read the Classics, Free" />
+  <meta property="og:description" content="A cozy e-book library for public-domain classics with a built-in reader." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#171310" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to library</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="logo" href="#main">📚 Bin<span>dery</span></a>
+      <nav class="tabs" aria-label="Sections">
+        <button class="tab is-active" id="tab-library" type="button" aria-pressed="true">Library</button>
+        <button class="tab" id="tab-discover" type="button" aria-pressed="false">Discover</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ LIBRARY ============ -->
+    <section class="view" id="view-library">
+      <div class="wrap">
+        <div id="continue-shelf" class="shelf" hidden>
+          <h2 class="shelf-title">Continue reading</h2>
+          <div id="continue-row" class="book-row"></div>
+        </div>
+
+        <h2 class="shelf-title">The collection</h2>
+        <p class="shelf-sub">Four complete masterpieces, bundled with the site — open any of them in the built-in reader.</p>
+        <div id="collection-grid" class="book-grid"></div>
+      </div>
+    </section>
+
+    <!-- ============ DISCOVER ============ -->
+    <section class="view" id="view-discover" hidden>
+      <div class="wrap">
+        <h2 class="shelf-title">Discover 70,000+ free books</h2>
+        <p class="shelf-sub">Live search across Project Gutenberg. Books open on gutenberg.org.</p>
+
+        <form id="discover-form" class="discover-bar" role="search">
+          <label class="sr-only" for="q">Search books</label>
+          <input id="q" type="search" placeholder="Search titles, authors…" autocomplete="off" />
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+
+        <div class="chips" role="group" aria-label="Browse by topic">
+          <button class="chip is-active" data-topic="" type="button" aria-pressed="true">All</button>
+          <button class="chip" data-topic="fiction" type="button" aria-pressed="false">Fiction</button>
+          <button class="chip" data-topic="adventure" type="button" aria-pressed="false">Adventure</button>
+          <button class="chip" data-topic="mystery" type="button" aria-pressed="false">Mystery</button>
+          <button class="chip" data-topic="science fiction" type="button" aria-pressed="false">Sci-Fi</button>
+          <button class="chip" data-topic="romance" type="button" aria-pressed="false">Romance</button>
+          <button class="chip" data-topic="poetry" type="button" aria-pressed="false">Poetry</button>
+          <button class="chip" data-topic="history" type="button" aria-pressed="false">History</button>
+        </div>
+
+        <p id="discover-status" class="discover-status" aria-live="polite"></p>
+        <div id="discover-grid" class="book-grid"></div>
+        <button id="load-more" class="btn btn-ghost btn-more" type="button" hidden>Load more</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ BOOK DETAIL MODAL (discover) ============ -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card">
+      <button id="modal-close" class="modal-close" type="button" data-close aria-label="Close">✕</button>
+      <div class="modal-grid">
+        <img id="modal-cover" class="modal-cover" alt="" />
+        <div>
+          <h2 id="modal-title"></h2>
+          <p id="modal-author" class="modal-author"></p>
+          <p id="modal-desc" class="modal-desc"></p>
+          <div id="modal-tags" class="modal-tags"></div>
+          <div class="modal-actions">
+            <a id="modal-read" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">Read at Gutenberg ↗</a>
+            <a id="modal-download" class="btn btn-ghost" href="#" target="_blank" rel="noopener noreferrer">Download text</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ READER OVERLAY ============ -->
+  <div id="reader" class="reader" role="dialog" aria-modal="true" aria-label="Book reader" hidden>
+    <header class="reader-top">
+      <button id="reader-close" class="reader-btn" type="button" aria-label="Close reader">✕</button>
+      <div class="reader-title-box">
+        <p id="reader-title" class="reader-title"></p>
+        <p id="reader-author" class="reader-author"></p>
+      </div>
+      <div class="reader-tools">
+        <button id="font-minus" class="reader-btn" type="button" aria-label="Smaller text">A−</button>
+        <button id="font-plus" class="reader-btn" type="button" aria-label="Larger text">A+</button>
+      </div>
+    </header>
+
+    <div id="reader-pages" class="reader-pages">
+      <div id="reader-frame" tabindex="0" aria-label="Book pages">
+        <div id="reader-content" class="reader-content"></div>
+      </div>
+    </div>
+
+    <footer class="reader-bottom">
+      <button id="page-prev" class="reader-btn" type="button">‹ Prev</button>
+      <div class="reader-progress">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      <span id="page-label" class="page-label">0%</span>
+      <button id="page-next" class="reader-btn" type="button">Next ›</button>
+    </footer>
+  </div>
+
+  <footer class="foot">
+    <p>Collection texts from <a href="https://www.gutenberg.org" target="_blank" rel="noopener noreferrer">Project Gutenberg</a> (public domain). Discovery data via the free Gutendex API.</p>
+    <p>© <span id="year"></span> <a href="https://github.com/MuhammadAwais047" target="_blank" rel="noopener noreferrer">Muhammad Awais</a> · <a href="https://github.com/MuhammadAwais047/e-book-site" target="_blank" rel="noopener noreferrer">Source</a></p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
