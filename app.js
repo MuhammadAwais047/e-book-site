@@ -50,12 +50,34 @@
     Romance: "gc-romance",
   };
 
-  const genCover = (book) => `
-    <div class="gen-cover ${GENRE_CLASS[book.genre] || "gc-fantasy"}">
-      <span class="g-genre">${book.genre}</span>
-      <span class="g-title">${book.title}</span>
-      <span class="g-author">${book.author}</span>
-    </div>`;
+  const safeUrl = (u, f) => {
+    try {
+      const p = new URL(u);
+      return /^https?:$/.test(p.protocol) ? p.href : f;
+    } catch {
+      return f;
+    }
+  };
+
+  const genCover = (book) => {
+    const el = document.createElement("div");
+    el.className = `gen-cover ${GENRE_CLASS[book.genre] || "gc-fantasy"}`;
+
+    const genre = document.createElement("span");
+    genre.className = "g-genre";
+    genre.textContent = book.genre;
+
+    const title = document.createElement("span");
+    title.className = "g-title";
+    title.textContent = book.title;
+
+    const author = document.createElement("span");
+    author.className = "g-author";
+    author.textContent = book.author;
+
+    el.append(genre, title, author);
+    return el;
+  };
 
   const PLACEHOLDER = (title, hue) =>
     `data:image/svg+xml,${encodeURIComponent(
@@ -71,7 +93,7 @@
 
     const cover = document.createElement("div");
     cover.className = "cover";
-    cover.innerHTML = genCover(book);
+    cover.append(genCover(book));
 
     const title = document.createElement("p");
     title.className = "b-title";
@@ -159,7 +181,7 @@
     img.loading = "lazy";
     img.alt = `Cover of ${item.title}`;
     const coverUrl = item.formats["image/jpeg"] || item.formats["image/png"];
-    img.src = coverUrl || PLACEHOLDER(item.title, item.id % 360);
+    img.src = safeUrl(coverUrl, "") || PLACEHOLDER(item.title, item.id % 360);
     img.addEventListener("error", () => {
       img.src = PLACEHOLDER(item.title, item.id % 360);
     });
@@ -193,7 +215,7 @@
       discoverGrid.append(spinner);
     }
 
-    const url = discoverState.nextPage || discoverState.url;
+    const url = safeUrl(discoverState.nextPage || discoverState.url, discoverState.url);
     discoverStatus.textContent = discoverState.queried && reset ? "Searching…" : "";
 
     try {
@@ -273,16 +295,18 @@
 
   const openModal = (item) => {
     lastFocus = document.activeElement;
-    $("modal-cover").src =
-      item.formats["image/jpeg"] || item.formats["image/png"] || PLACEHOLDER(item.title, item.id % 360);
+    $("modal-cover").src = safeUrl(
+      item.formats["image/jpeg"] || item.formats["image/png"],
+      PLACEHOLDER(item.title, item.id % 360)
+    );
     $("modal-cover").alt = `Cover of ${item.title}`;
     $("modal-title").textContent = item.title;
     $("modal-author").textContent = item.authors.length
       ? `${item.authors[0].name.split(", ").reverse().join(" ")}${item.authors[0].birth_year ? ` (${item.authors[0].birth_year}–${item.authors[0].death_year ?? ""})` : ""}`
       : "Unknown author";
     $("modal-desc").textContent = item.summaries?.[0]?.replace(/\s+/g, " ").trim() || "No summary available for this book.";
-    $("modal-read").href = `https://www.gutenberg.org/ebooks/${item.id}`;
-    $("modal-download").href = txtLinkOf(item.id, item.formats);
+    $("modal-read").href = safeUrl(`https://www.gutenberg.org/ebooks/${item.id}`, "#");
+    $("modal-download").href = safeUrl(txtLinkOf(item.id, item.formats), "#");
 
     const tags = $("modal-tags");
     tags.replaceChildren(
